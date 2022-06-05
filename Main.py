@@ -28,35 +28,50 @@ def printC(value,color):
         print(value)
 
 def UpdateRecord(Record, i):
-    name = input("Enter Updated Customer Name: ")
-    package_name = input("Enter Updated Package Name: ")
-    pax = input("Enter Updated number of pax: ")
-    cost_per_pax = input("Enter Updated cost per pax: ")
     oldcname = Record[i].get_customer_name()
     oldpname = Record[i].get_package_name()
     oldpax = Record[i].get_no_of_pax()
     oldcost = Record[i].get_cost_per_pax()
-    
-    if name != '':
-        if name.isalpha() == True:
-            Record[i].set_customer_name(str(name).title())
+    while True:
+        name = input("Enter Updated Customer Name: ")
+        if name != '':
+            if name.isalpha() == True:
+                Record[i].set_customer_name(str(name).title())
+                break
+            else:
+                printC("Please only enter letters for customer name", "Y")
         else:
-            printC("Please only enter letters only for customer name", "Y")
-    if package_name != '':
-        if package_name.isalpha() == True:
-            Record[i].set_package_name(str(package_name).title())
+            break
+    while True:
+        package_name = input("Enter Updated Package Name: ")
+        if package_name != '':
+            if package_name.isalpha() == True:
+                Record[i].set_package_name(str(package_name).title())
+                break
+            else:
+                printC("Please only enter letters for package name", "Y")
         else:
-            printC("Please only enter letters only for package name", "Y")
-    if pax != '':
-        if pax.isdigit() == True and int(pax) > 0:
-            Record[i].set_no_of_pax(int(pax))
+            break
+    while True:
+        pax = input("Enter Updated number of pax: ")
+        if pax != '':
+            if pax.isdigit() == True and int(pax) > 0:
+                Record[i].set_no_of_pax(int(pax))
+                break
+            else:
+                printC("Please only enter numbers for pax", "Y")
         else:
-            printC("Please only enter numbers for pax", "Y")
-    if cost_per_pax != '':
-        if cost_per_pax.isdigit() == True and int(cost_per_pax) > 0:
-            Record[i].set_cost_per_pax(int(cost_per_pax))
+            break
+    while True:
+        cost_per_pax = input("Enter Updated cost per pax: ")
+        if cost_per_pax != '':
+            if cost_per_pax.isdigit() == True and int(cost_per_pax) > 0:
+                Record[i].set_cost_per_pax(int(cost_per_pax))
+                break
+            else:
+                printC("Please only enter numbers for cost", "Y")
         else:
-            printC("Please only enter numbers for cost", "Y")
+            break
     print(f"""
     ******************************************************************************
     Package Name: {oldpname if oldpname == Record[i].get_package_name() else Fore.BLUE + f"{oldpname} ---> {Record[i].get_package_name()}"+ Style.RESET_ALL}
