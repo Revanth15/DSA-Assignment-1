@@ -1,6 +1,7 @@
 from tabulate import tabulate
 from Booking import Booking
 import time
+from colorama import Fore, Style
 
 
 def Menu():
@@ -16,33 +17,54 @@ def Menu():
     0. Exit Application
     """)
 
+def printC(value,color):
+    if color. upper() == "Y": 
+        print(Fore.YELLOW + value + Style.RESET_ALL)
+    elif color.upper() == "R": 
+        print(Fore.RED + value + Style.RESET_ALL)
+    elif color.upper() == "G": 
+        print(Fore.GREEN + value + Style.RESET_ALL)
+    else:
+        print(value)
 
 def UpdateRecord(Record, i):
     name = input("Enter Updated Customer Name: ")
     package_name = input("Enter Updated Package Name: ")
     pax = input("Enter Updated number of pax: ")
     cost_per_pax = input("Enter Updated cost per pax: ")
+    oldcname = Record[i].get_customer_name()
+    oldpname = Record[i].get_package_name()
+    oldpax = Record[i].get_no_of_pax()
+    oldcost = Record[i].get_cost_per_pax()
     
     if name != '':
         if name.isalpha() == True:
             Record[i].set_customer_name(str(name).title())
         else:
-            print("Please only enter letters only for customer name")
+            printC("Please only enter letters only for customer name", "Y")
     if package_name != '':
         if package_name.isalpha() == True:
             Record[i].set_package_name(str(package_name).title())
         else:
-            print("Please only enter letters only for package name")
+            printC("Please only enter letters only for package name", "Y")
     if pax != '':
         if pax.isdigit() == True and int(pax) > 0:
             Record[i].set_no_of_pax(int(pax))
         else:
-            print("Please only enter numbers for pax")
+            printC("Please only enter numbers for pax", "Y")
     if cost_per_pax != '':
         if cost_per_pax.isdigit() == True and int(cost_per_pax) > 0:
             Record[i].set_cost_per_pax(int(cost_per_pax))
         else:
-            print("Please only enter numbers for cost")
+            printC("Please only enter numbers for cost", "Y")
+    print(f"""
+    ******************************************************************************
+    Package Name: {oldpname if oldpname == Record[i].get_package_name() else Fore.BLUE + f"{oldpname} ---> {Record[i].get_package_name()}"+ Style.RESET_ALL}
+    Customer Name: {oldcname if oldcname == Record[i].get_customer_name() else Fore.BLUE + str(oldcname) + " ---> " + str(Record[i].get_customer_name())+ Style.RESET_ALL}
+    Number of Pax: {oldpax if oldpax == Record[i].get_no_of_pax() else Fore.BLUE + str(oldpax) + " ---> " + str(Record[i].get_no_of_pax())+ Style.RESET_ALL}
+    Cost per Pax: {oldcost if oldcost == Record[i].get_cost_per_pax() else Fore.BLUE + str(oldcost) + " ---> " + str(Record[i].get_cost_per_pax())+ Style.RESET_ALL}
+    """)
+    printC("Record has successfully been updated!","G")
 
 
 def DisplayAllRecords(Record):
@@ -96,7 +118,6 @@ def NoofPaxbyShellSort(Record):
                 j -= gap
             Record[j] = temp
         gap //= 2
-    DisplayAllRecords(Record)
 
 
 def SearchRecordbyCustomerName(Record):
@@ -108,7 +129,6 @@ def SearchRecordbyCustomerName(Record):
 
     if len(table) == 1:
         UpdateRecord(Record, table[0][0])
-        print("Record has successfully been updated!")
     elif len(table) > 1:
         print("Looks like there are more than 1 customer ")
         print(tabulate(table, headers=["ID","Package Name", "Customer Name", "Pax number", "Cost per pax"],tablefmt="psql"))
@@ -116,9 +136,8 @@ def SearchRecordbyCustomerName(Record):
         for i in range(len(table)):
             if chosenID == table[i][0]:
                 UpdateRecord(Record, chosenID)
-                print("Record has successfully been updated!")
     else:
-        print("Name not found in list")
+        printC("Name not found in list", "R")
 
 
 def SearchRecordbyPackageName(Record):
@@ -144,15 +163,15 @@ def ListRecordsRange(Record):
     while True:
         rangeInput = input("Enter range: ").replace("$", "")
         if rangeInput == "0":
-            print("0 cannot be entered")
+            printC("0 cannot be entered","Y")
             return None
         rangeInput = rangeInput.split("-")
         if not (rangeInput[0].isdecimal() and rangeInput[1].isdecimal()):
-            print("$X and $Y is not a number!")
+            printC("$X and $Y is not a number!","Y")
             return None
         PackageCostbyInsertionSort(Record)
         if int(rangeInput[0]) < Record[0].get_cost_per_pax():
-            print(f"Range is too low, lowest package cost per pax is ${Record[0].get_cost_per_pax()} and you entered ${rangeInput[0]}")
+            printC(f"Range is too low, lowest package cost per pax is ${Record[0].get_cost_per_pax()} and you entered ${rangeInput[0]}", "Y")
             return None
         table = []
         for i in range(len(Record)):
@@ -188,10 +207,10 @@ while True:
     Menu()
     userInput = input("Enter (1-7) to begin program, 0 to quit: ")
     if userInput == '0':
-        # for x in range(0, 4):
-        #     b = "Ending Program" + "." * x
-        #     print(b, end="\r")
-        #     time.sleep(0.5)
+        for x in range(0, 4):
+            b = "Ending Program" + "." * x
+            print(b, end="\r")
+            time.sleep(0.5)
         break
     elif userInput == '1':
         DisplayAllRecords(Record)
@@ -205,6 +224,8 @@ while True:
         DisplayAllRecords(Record)
     elif userInput == '5':
         NoofPaxbyShellSort(Record)
+        NoofPaxbyShellSort(Record)
+        DisplayAllRecords(Record)
     elif userInput == '6':
         SearchRecordbyCustomerName(Record)
     elif userInput == '7':
@@ -212,4 +233,4 @@ while True:
     elif userInput == '8':
         ListRecordsRange(Record)
     else:
-        print("Please enter numbers from 0-7 only.Thank you!")
+        printC("Please enter numbers from 0-7 only.Thank you!","R")
